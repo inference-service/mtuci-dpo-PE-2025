@@ -7,7 +7,7 @@ from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import CharacterTextSplitter
 
 import textwrap
-
+import dotenv
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -56,7 +56,6 @@ def main():
     st.title("Генератор резюме")
 
     uploaded_file = st.file_uploader("Выберите резюме", type=["docx", "pdf"])
-
     text = ""
     if uploaded_file is not None:
         file_extension = uploaded_file.name.split('.')[-1]
@@ -66,15 +65,15 @@ def main():
         st.write(f"Тип файла: {file_extension}")
 
         if file_extension == "docx":
-            text = process_docx(uploaded_file.name)
+            text = process_docx("data/"+uploaded_file.name)
         elif file_extension == "pdf":
-            text = process_pdf(uploaded_file.name)
+            text = process_pdf("data/"+uploaded_file.name)
         else:
             st.error("Неподдерживаемый формат файла. Пожалуйста, загрузите файл .docx или .pdf.")
             return
 
         llm = YandexGPT(
-            model_name="yandexgpt-lite",
+            model_name="yandexgpt",
             temperature=0.0,
         )
 
